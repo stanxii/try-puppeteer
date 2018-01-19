@@ -8,6 +8,45 @@ Try it: https://try-puppeteer.appspot.com
 
 Installation:
 
+docker rm $(docker ps -q -f status=exited)
+docker rm $(docker ps -a -q)
+docker images –filter "dangling=true"
+docker rmi $(docker images -f "dangling=true" -q)
+
+vim 每行行首或行行尾插入 (2012-04-10 19:37:00)转载▼
+标签： it	分类： linux
+每行的行首都添加一个字符串：%s/^/要插入的字符串
+
+每行的行尾都添加一个字符串：%s/$/要插入的字符串
+
+
+
+解释：
+
+% 代表针对被编辑文件的每一行进行后续操作
+$ 代表一行的结尾处
+^ 代表一行的开头处
+
+jQuery(' div.main  ol > li a span').each(function() { console.log( jQuery(this).text().trim().replace(/\(/, '').replace(/\)/,'') ); });
+
+jQuery(' div.main  ol > li a').each(function() { console.log( jQuery(this).attr('href')) });
+
+http://www.excelchips.cn/manufacturers/adi/4-20-loop-interface-devices.html
+http://www.excelchips.cn/manufacturers/adi/4-20-loop-interface-devices.html?p=9
+
+let fetch = require('node-fetch');
+
+(async () => {
+  try {
+    // request
+    let response = await fetch('http://localhost:8088/api/v1/hooy');
+    // parsing
+    let data = await response.json();
+    console.log('data: ', data);
+  } catch (error) {
+    console.log('error: ', error);
+  }
+})(); //
 ```sh
 yarn; yarn install-backend
 # or npm i
