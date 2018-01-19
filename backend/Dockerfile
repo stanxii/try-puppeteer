@@ -13,12 +13,12 @@ MAINTAINER Eric Bidelman <ebidel@>
 #
 
 # # Install missing shared libs for Chromium.
-# RUN apt-get update && \
-# apt-get install -yq gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
-# libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
-# libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
-# libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
-# ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+ RUN apt-get update && \
+ apt-get install -yq gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
+ libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
+ libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
+ libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
+ ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
 # Install latest chrome dev package.
 # Note: this also installs the necessary libs so we don't need the previous RUN command.
@@ -32,9 +32,9 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && apt-get purge --auto-remove -y curl \
     && rm -rf /src/*.deb
 
-COPY . /app/
+WORKDIR /app
+COPY . .
 #COPY local.conf /etc/fonts/local.conf
-WORKDIR app
 
 # Install deps for server.
 RUN yarn
@@ -47,10 +47,20 @@ RUN yarn
 # building the image.
 ARG CACHEBUST=1
 RUN yarn add puppeteer
+RUN yarn add csv-parse
+RUN yarn add csv-write-stream
+RUN yarn add fs
+RUN yarn add fs-extra
+RUN yarn add axios
+RUN yarn add node-fetch
 
 # Add pptr user.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
+    && mkdir -p /home/pptruser/ocr/data \
+    && touch  /home/pptruser/ocr/data/out_szlc.csv \
+    && chown -R pptruser:pptruser /home/pptruser/ocr \
+    && chown -R pptruser:pptruser /home/pptruser/ocr/data \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /app
 
@@ -59,4 +69,5 @@ USER pptruser
 
 EXPOSE 8080
 
-CMD ["yarn", "start"]
+# CMD ["yarn", "start"]
+CMD ["google-chrome-unstable"]

@@ -14,7 +14,9 @@ echo "Running $1 in Puppeteer..."
 file=`cat $1`
 
 # set -x # debug on
-docker run -i --rm --cap-add=SYS_ADMIN \
+ #-v /usr/local/gopath/src/github.com/ebidel/try-puppeteer/backend/out:/home/pptruser/ocr/data \
+docker run --shm-size=1gb -i --rm --cap-add=SYS_ADMIN \
   --name puppeteer-chrome puppeteer-chrome-linux \
   node -e "$file"
+#  node -e "--trace-warnings $file"
 # set +x # debug off
